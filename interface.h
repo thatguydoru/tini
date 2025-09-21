@@ -14,21 +14,11 @@
    limitations under the License.
 */
 
-#ifndef __TINI_ALLOCATOR_H__
-#define __TINI_ALLOCATOR_H__
+#ifndef __TINI_INTERFACE_H__
+#define __TINI_INTERFACE_H__
 
-#include <stddef.h>
-
-#include "interface.h"
-
-tini_interface_def(TiniAllocator,
-	void* (*alloc)(void* self, size_t n, size_t size);
-	void* (*realloc)(void* self, void* ptr, size_t n, size_t size);
-	void (*free)(void* self, void* ptr);
-);
-
-void* tini_alloc(TiniAllocator allocator, size_t n, size_t size);
-void* tini_realloc(TiniAllocator allocator, void* ptr, size_t n, size_t size);
-void tini_free(TiniAllocator allocator, void* ptr);
+#define tini_interface_def(id, funcs) \
+	typedef struct id##VTable { funcs } id##VTable; \
+	typedef struct id { void* self; id##VTable* vtable; } id;
 
 #endif

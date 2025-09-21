@@ -18,17 +18,13 @@
 #define __TINI_ITER_H__
 
 #include "compat.h"
+#include "interface.h"
 
 #define tini_foreach(T, id, iter) for (T* id = tini_next(iter); id != nullptr; id = tini_next(iter))
 
-typedef struct TiniIteratorVTable {
+tini_interface_def(TiniIterator,
 	void* (*next)(void* self);
-} TiniIteratorVTable;
-
-typedef struct TiniIterator {
-	void*               self;
-	TiniIteratorVTable* vtable;
-} TiniIterator;
+);
 
 void* tini_next(TiniIterator iterator);
 
