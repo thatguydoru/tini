@@ -17,13 +17,13 @@
 #ifndef __TINI_ITER_H__
 #define __TINI_ITER_H__
 
-#include "compat.h"
-#include "interface.h"
+#include "tini.h"
 
 #define tini_foreach(T, id, iter) for (T* id = tini_next(iter); id != nullptr; id = tini_next(iter))
 
-tini_interface_def(TiniIterator,
-	void* (*next)(void* self);
+tini_interface_def(
+    TiniIterator,
+		void* (*next)(void* self);
 );
 
 void* tini_next(TiniIterator iterator);

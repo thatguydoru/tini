@@ -17,7 +17,6 @@
 #include <string.h>
 
 #include "../allocator.h"
-#include "../compat.h"
 #include "../iter.h"
 #include "vec.h"
 
