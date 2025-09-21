@@ -14,28 +14,15 @@
    limitations under the License.
 */
 
-#ifndef __TINI_CONTAINERS_H__
-#define __TINI_CONTAINERS_H__
+#ifndef __TINI_CONTAINERS_VEC_H__
+#define __TINI_CONTAINERS_VEC_H__
 
 #include <stdbool.h>
-#include <stddef.h>
 
-#include "allocators.h"
+#include "../allocator.h"
+#include "../iter.h"
 
 #define tini_vec_t(T) TiniVec
-
-#define tini_foreach(T, id, iter) for (T* id = tini_next(iter); id != NULL; id = tini_next(iter))
-
-typedef struct TiniIteratorVTable {
-	void* (*next)(void* self);
-} TiniIteratorVTable;
-
-typedef struct TiniIterator {
-	void*               self;
-	TiniIteratorVTable* vtable;
-} TiniIterator;
-
-void* tini_next(TiniIterator iterator);
 
 typedef struct TiniVec {
 	void*         items;
@@ -59,16 +46,10 @@ typedef struct TiniVecIterator {
 } TiniVecIterator;
 
 TiniVecIterator tini_vec_iterator_new(TiniVec* vec);
+TiniVecIterator tini_vec_iterator_rev_new(TiniVec* vec);
 void* tini_vec_iterator_next(void* self);
+void* tini_vec_iterator_rev_next(void* self);
 TiniIterator tini_vec_iterator_as_iterator(TiniVecIterator* iterator);
-
-typedef struct TiniVecRevIterator {
-	TiniVec* vec;
-	size_t   at;
-} TiniVecRevIterator;
-
-TiniVecRevIterator tini_vec_rev_iterator_new(TiniVec* vec);
-void* tini_vec_rev_iterator_next(void* self);
-TiniIterator tini_vec_rev_iterator_as_iterator(TiniVecIterator* iterator);
+TiniIterator tini_vec_iterator_as_rev_iterator(TiniVecIterator* iterator);
 
 #endif

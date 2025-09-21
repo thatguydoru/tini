@@ -14,18 +14,15 @@
    limitations under the License.
 */
 
-#include <stdbool.h>
 #include <string.h>
 
-#include "allocators.h"
-#include "containers.h"
+#include "../allocator.h"
+#include "../compat.h"
+#include "../iter.h"
+#include "vec.h"
 
-static TiniIteratorVTable forward_vtable = {tini_vec_iterator_next};
-static TiniIteratorVTable reverse_vtable = {tini_vec_rev_iterator_next};
-
-inline void* tini_next(TiniIterator iterator) {
-	return iterator.vtable->next(iterator.self);
-}
+static TiniIteratorVTable vec_fwd_iter_vtable = {tini_vec_iterator_next};
+static TiniIteratorVTable vec_rev_iter_vtable = {tini_vec_iterator_rev_next};
 
 bool ensure_capacity(TiniVec* vec) {
 	if (vec->length < vec->capacity) {
@@ -35,7 +32,7 @@ bool ensure_capacity(TiniVec* vec) {
 	size_t capacity = vec->capacity * 2;
 	void* realloced_items =
 		tini_realloc(vec->allocator, vec->items, vec->capacity, vec->item_size);
-	if (!realloced_items) {
+	if (realloced_items == nullptr) {
 		return false;
 	}
 	vec->items = realloced_items;
@@ -47,7 +44,7 @@ bool ensure_capacity(TiniVec* vec) {
 bool tini_vec_with_capacity(TiniVec* vec, size_t capacity, size_t item_size, TiniAllocator allocator) {
 	*vec = (TiniVec){0};
 	vec->items = tini_alloc(allocator, capacity, item_size);
-	if (!vec->items) {
+	if (vec->items == nullptr) {
 		return false;
 	}
 	vec->capacity = capacity;
@@ -88,7 +85,7 @@ bool tini_vec_extend(TiniVec* vec, const void* items, size_t length) {
 	size_t capacity = vec->capacity + length;
 	void* realloced_items =
 		tini_realloc(vec->allocator, vec->items, capacity, vec->item_size);
-	if (!realloced_items) {
+	if (realloced_items == nullptr) {
 		return false;
 	}
 
@@ -103,7 +100,7 @@ bool tini_vec_extend(TiniVec* vec, const void* items, size_t length) {
 
 void* tini_vec_at(const TiniVec* vec, size_t index) {
 	if (index >= vec->length) {
-		return NULL;
+		return nullptr;
 	}
 
 	return vec->items + index * vec->item_size;
@@ -118,36 +115,38 @@ TiniVecIterator tini_vec_iterator_new(TiniVec* vec) {
 	return (TiniVecIterator){vec, 0};
 }
 
+TiniVecIterator tini_vec_iterator_rev_new(TiniVec* vec) {
+	return (TiniVecIterator){vec, vec->length};
+}
+
 void* tini_vec_iterator_next(void* self) {
 	TiniVecIterator* this = self;
 	if (this->at >= this->vec->length) {
-		return NULL;
+		return nullptr;
 	}
+
 	void* item = tini_vec_at(this->vec, this->at);
 	this->at++;
 
 	return item;
 }
 
-TiniIterator tini_vec_iterator_as_iterator(TiniVecIterator* iterator) {
-	return (TiniIterator){iterator, &forward_vtable};
-}
-
-TiniVecRevIterator tini_vec_rev_iterator_new(TiniVec* vec) {
-	return (TiniVecRevIterator){vec, vec->length - 1};
-}
-
-void* tini_vec_rev_iterator_next(void* self) {
-	TiniVecRevIterator* this = self;
+void* tini_vec_iterator_rev_next(void* self) {
+	TiniVecIterator* this = self;
 	if (this->at == 0) {
-		return NULL;
+		return nullptr;
 	}
-	void* item = tini_vec_at(this->vec, this->at);
+
+	void* item = tini_vec_at(this->vec, this->at - 1);
 	this->at--;
 
 	return item;
 }
 
-TiniIterator tini_vec_rev_iterator_as_iterator(TiniVecIterator* iterator) {
-	return (TiniIterator){iterator, &reverse_vtable};
+TiniIterator tini_vec_iterator_as_iterator(TiniVecIterator* iterator) {
+	return (TiniIterator){iterator, &vec_fwd_iter_vtable};
+}
+
+TiniIterator tini_vec_iterator_as_rev_iterator(TiniVecIterator* iterator) {
+	return (TiniIterator){iterator, &vec_rev_iter_vtable};
 }

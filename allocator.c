@@ -14,15 +14,9 @@
    limitations under the License.
 */
 
-#include <stdlib.h>
+#include <stddef.h>
 
-#include "allocators.h"
-
-static TiniAllocatorVTable std_vtable = {
-	tini_std_allocator_alloc,
-	tini_std_allocator_realloc,
-	tini_std_allocator_free
-};
+#include "allocator.h"
 
 inline void* tini_alloc(TiniAllocator allocator, size_t n, size_t size) {
 	return allocator.vtable->alloc(allocator.self, n, size);
@@ -34,20 +28,4 @@ inline void* tini_realloc(TiniAllocator allocator, void* ptr, size_t n, size_t s
 
 inline void tini_free(TiniAllocator allocator, void* ptr) {
 	return allocator.vtable->free(allocator.self, ptr);
-}
-
-void* tini_std_allocator_alloc(void* _, size_t n, size_t size) {
-	return calloc(n, size);
-}
-
-void* tini_std_allocator_realloc(void* _, void* ptr, size_t n, size_t size) {
-	return realloc(ptr, n * size);
-}
-
-void tini_std_allocator_free(void* _, void* ptr) {
-	free(ptr);
-}
-
-TiniAllocator tini_std_allocator_as_allocator(TiniStdAllocator* allocator) {
-	return (TiniAllocator){allocator, &std_vtable};
 }

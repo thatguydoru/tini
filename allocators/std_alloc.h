@@ -14,25 +14,10 @@
    limitations under the License.
 */
 
-#ifndef __TINI_ALLOCATORS_H__
-#define __TINI_ALLOCATORS_H__
+#ifndef __TINI_ALLOCATORS_STD_ALLOC_H__
+#define __TINI_ALLOCATORS_STD_ALLOC_H__
 
-#include <stddef.h>
-
-typedef struct TiniAllocatorVTable {
-	void* (*alloc)(void* self, size_t n, size_t size);
-	void* (*realloc)(void* self, void* ptr, size_t n, size_t size);
-	void (*free)(void* self, void* ptr);
-} TiniAllocatorVTable;
-
-typedef struct TiniAllocator {
-	void*                self;
-	TiniAllocatorVTable* vtable;
-} TiniAllocator;
-
-void* tini_alloc(TiniAllocator allocator, size_t n, size_t size);
-void* tini_realloc(TiniAllocator allocator, void* ptr, size_t n, size_t size);
-void tini_free(TiniAllocator allocator, void* ptr);
+#include "../allocator.h"
 
 typedef struct TiniStdAllocator{} TiniStdAllocator;
 
