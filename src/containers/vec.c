@@ -56,7 +56,7 @@ bool tini_vec_default(TiniVec* vec, size_t item_size, TiniAllocator allocator) {
 }
 
 bool tini_vec_from_array(TiniVec* vec, void* array, size_t length, size_t item_size, TiniAllocator allocator) {
-	if (!tini_vec_with_capacity(vec, length, item_size, allocator)) {
+	if (!tini_vec_with_capacity(vec, length * 2, item_size, allocator)) {
 		return false;
 	}
 
@@ -79,6 +79,10 @@ bool tini_vec_push(TiniVec* vec, void* item) {
 }
 
 bool tini_vec_extend(TiniVec* vec, const void* items, size_t length) {
+	if (length == 0) {
+		return true;
+	}
+
 	size_t capacity = vec->capacity + length;
 	void* realloced_items =
 		tini_realloc(vec->allocator, vec->items, vec->capacity, capacity, vec->item_size);
