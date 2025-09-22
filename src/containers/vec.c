@@ -16,12 +16,10 @@
 
 #include <string.h>
 
-#include "../allocator.h"
-#include "../iter.h"
 #include "vec.h"
 
-static TiniIteratorVTable vec_fwd_iter_vtable = {tini_vec_iterator_next};
-static TiniIteratorVTable vec_rev_iter_vtable = {tini_vec_iterator_rev_next};
+const TiniIteratorVTable vec_fwd_iter_vtable = {tini_vec_iterator_next};
+const TiniIteratorVTable vec_rev_iter_vtable = {tini_vec_iterator_rev_next};
 
 bool ensure_capacity(TiniVec* vec) {
 	if (vec->length < vec->capacity) {
@@ -30,7 +28,7 @@ bool ensure_capacity(TiniVec* vec) {
 
 	size_t capacity = vec->capacity * 2;
 	void* realloced_items =
-		tini_realloc(vec->allocator, vec->items, vec->capacity, vec->item_size);
+		tini_realloc(vec->allocator, vec->items, vec->capacity, capacity, vec->item_size);
 	if (realloced_items == nullptr) {
 		return false;
 	}
@@ -83,7 +81,7 @@ bool tini_vec_push(TiniVec* vec, void* item) {
 bool tini_vec_extend(TiniVec* vec, const void* items, size_t length) {
 	size_t capacity = vec->capacity + length;
 	void* realloced_items =
-		tini_realloc(vec->allocator, vec->items, capacity, vec->item_size);
+		tini_realloc(vec->allocator, vec->items, vec->capacity, capacity, vec->item_size);
 	if (realloced_items == nullptr) {
 		return false;
 	}
@@ -108,13 +106,14 @@ void* tini_vec_at(const TiniVec* vec, size_t index) {
 void tini_vec_free(TiniVec* vec) {
 	tini_free(vec->allocator, vec->items);
 	*vec = (TiniVec){0};
+	vec->items = nullptr;
 }
 
-TiniVecIterator tini_vec_iterator_new(TiniVec* vec) {
+TiniVecIterator tini_vec_iter(TiniVec* vec) {
 	return (TiniVecIterator){vec, 0};
 }
 
-TiniVecIterator tini_vec_iterator_rev_new(TiniVec* vec) {
+TiniVecIterator tini_vec_iter_rev(TiniVec* vec) {
 	return (TiniVecIterator){vec, vec->length};
 }
 

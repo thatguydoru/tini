@@ -19,17 +19,17 @@
 
 #include <stddef.h>
 
-#include "tini.h"
+#include "preamble.h"
 
 tini_interface_def(
     TiniAllocator,
 		void* (*alloc)(void* self, size_t n, size_t size);
-		void* (*realloc)(void* self, void* ptr, size_t n, size_t size);
+		void* (*realloc)(void* self, void* ptr, size_t old_n, size_t n, size_t size);
 		void (*free)(void* self, void* ptr);
 );
 
 void* tini_alloc(TiniAllocator allocator, size_t n, size_t size);
-void* tini_realloc(TiniAllocator allocator, void* ptr, size_t n, size_t size);
+void* tini_realloc(TiniAllocator allocator, void* ptr, size_t old_n, size_t n, size_t size);
 void tini_free(TiniAllocator allocator, void* ptr);
 
 #endif

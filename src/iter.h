@@ -17,7 +17,7 @@
 #ifndef __TINI_ITER_H__
 #define __TINI_ITER_H__
 
-#include "tini.h"
+#include "preamble.h"
 
 #define tini_foreach(T, id, iter) for (T* id = tini_next(iter); id != nullptr; id = tini_next(iter))
 

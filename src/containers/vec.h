@@ -45,8 +45,8 @@ typedef struct TiniVecIterator {
 	size_t   at;
 } TiniVecIterator;
 
-TiniVecIterator tini_vec_iterator_new(TiniVec* vec);
-TiniVecIterator tini_vec_iterator_rev_new(TiniVec* vec);
+TiniVecIterator tini_vec_iter(TiniVec* vec);
+TiniVecIterator tini_vec_iter_rev(TiniVec* vec);
 void* tini_vec_iterator_next(void* self);
 void* tini_vec_iterator_rev_next(void* self);
 TiniIterator tini_vec_iterator_as_iterator(TiniVecIterator* iterator);

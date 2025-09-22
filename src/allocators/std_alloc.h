@@ -22,7 +22,7 @@
 typedef struct TiniStdAllocator{} TiniStdAllocator;
 
 void* tini_std_allocator_alloc(void* self, size_t n, size_t size);
-void* tini_std_allocator_realloc(void* self, void* ptr, size_t n, size_t size);
+void* tini_std_allocator_realloc(void* self, void* ptr, size_t old_n, size_t n, size_t size);
 void tini_std_allocator_free(void* self, void* ptr);
 TiniAllocator tini_std_allocator_as_allocator(TiniStdAllocator* allocator);
 

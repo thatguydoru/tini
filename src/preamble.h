@@ -14,8 +14,8 @@
    limitations under the License.
 */
 
-#ifndef __TINI_H__
-#define __TINI_H__
+#ifndef __TINI_PREAMBLE_H__
+#define __TINI_PREAMBLE_H__
 
 #if __STDC_VERSION__ < 202311
 	#define nullptr NULL
@@ -23,6 +23,6 @@
 
 #define tini_interface_def(id, funcs) \
 	typedef struct id##VTable { funcs } id##VTable; \
-	typedef struct id { void* self; id##VTable* vtable; } id;
+	typedef struct id { void* self; const id##VTable* vtable; } id;
 
 #endif

@@ -22,8 +22,8 @@ inline void* tini_alloc(TiniAllocator allocator, size_t n, size_t size) {
 	return allocator.vtable->alloc(allocator.self, n, size);
 }
 
-inline void* tini_realloc(TiniAllocator allocator, void* ptr, size_t n, size_t size) {
-	return allocator.vtable->realloc(allocator.self, ptr, n, size);
+inline void* tini_realloc(TiniAllocator allocator, void* ptr, size_t old_n, size_t n, size_t size) {
+	return allocator.vtable->realloc(allocator.self, ptr, old_n, n, size);
 }
 
 inline void tini_free(TiniAllocator allocator, void* ptr) {

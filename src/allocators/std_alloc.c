@@ -15,10 +15,11 @@
 */
 
 #include <stdlib.h>
+#include <string.h>
 
 #include "std_alloc.h"
 
-static TiniAllocatorVTable std_vtable = {
+const TiniAllocatorVTable std_vtable = {
 	tini_std_allocator_alloc,
 	tini_std_allocator_realloc,
 	tini_std_allocator_free
@@ -28,8 +29,17 @@ void* tini_std_allocator_alloc(void* _, size_t n, size_t size) {
 	return calloc(n, size);
 }
 
-void* tini_std_allocator_realloc(void* _, void* ptr, size_t n, size_t size) {
-	return realloc(ptr, n * size);
+void* tini_std_allocator_realloc(void* _, void* ptr, size_t old_n, size_t n, size_t size) {
+	if (old_n == n) {
+		return ptr;
+	}
+
+	ptr = realloc(ptr, n * size);
+	if (ptr != nullptr && n > old_n) {
+		memset(ptr + n * size, 0, (n - old_n) * size);
+	}
+
+	return ptr;
 }
 
 void tini_std_allocator_free(void* _, void* ptr) {
