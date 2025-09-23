@@ -17,8 +17,6 @@
 #ifndef __TINI_CONTAINERS_VEC_H__
 #define __TINI_CONTAINERS_VEC_H__
 
-#include <stdbool.h>
-
 #include "../allocator.h"
 #include "../iter.h"
 

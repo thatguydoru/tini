@@ -17,7 +17,10 @@
 #ifndef __TINI_ITER_H__
 #define __TINI_ITER_H__
 
+#include <stddef.h>
+
 #include "preamble.h"
+#include "allocator.h"
 
 #define tini_foreach(T, id, iter) for (T* id = tini_next(iter); id != nullptr; id = tini_next(iter))
 
@@ -27,5 +30,8 @@ tini_interface_def(
 );
 
 void* tini_next(TiniIterator iterator);
+size_t tini_count(TiniIterator iterator);
+void* tini_find(TiniIterator iterator, void* target, bool(*test)(void* target, void* item));
+bool tini_all(TiniIterator iterator, bool (*test)(void* item));
 
 #endif

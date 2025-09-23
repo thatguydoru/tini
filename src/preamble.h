@@ -18,6 +18,8 @@
 #define __TINI_PREAMBLE_H__
 
 #if __STDC_VERSION__ < 202311
+	#include <stdbool.h>
+
 	#define nullptr NULL
 #endif
 

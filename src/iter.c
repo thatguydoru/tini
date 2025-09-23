@@ -19,3 +19,32 @@
 inline void* tini_next(TiniIterator iterator) {
 	return iterator.vtable->next(iterator.self);
 }
+
+size_t tini_count(TiniIterator iterator) {
+	size_t count = 0;
+	tini_foreach (void, _, iterator) {
+		count++;
+	}
+
+	return count;
+}
+
+void* tini_find(TiniIterator iterator, void* target, bool (*test)(void* target, void* item)) {
+	tini_foreach (void, item, iterator) {
+		if (test(target, item)) {
+			return item;
+		}
+	}
+
+	return nullptr;
+}
+
+bool tini_all(TiniIterator iterator, bool (*test)(void* item)) {
+	tini_foreach (void, item, iterator) {
+		if (!test(item)) {
+			return false;
+		}
+	}
+
+	return true;
+}
