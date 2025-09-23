@@ -19,14 +19,13 @@
 
 #include "../allocator.h"
 #include "../iter.h"
+#include "slice.h"
 
 #define tini_vec_t(T) TiniVec
 
 typedef struct TiniVec {
-	void*         items;
-	size_t        length;
+	TiniSlice     slice;
 	size_t        capacity;
-	size_t        item_size;
 	TiniAllocator allocator;
 } TiniVec;
 
@@ -36,6 +35,7 @@ bool tini_vec_from_array(TiniVec* vec, void* array, size_t length, size_t item_s
 bool tini_vec_push(TiniVec* vec, void* item);
 bool tini_vec_extend(TiniVec* vec, const void* items, size_t length);
 void* tini_vec_at(const TiniVec* vec, size_t index);
+void tini_vec_clear(TiniVec* vec);
 void tini_vec_free(TiniVec* vec);
 
 typedef struct TiniVecIterator {

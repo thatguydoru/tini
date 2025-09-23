@@ -3,6 +3,7 @@
 #include "src/allocators/std_alloc.h" // tini/allocators/std_alloc.h
 #include "src/containers/slice.h" // tini/containers/array.h
 #include "src/containers/vec.h" // tini/containers/vec.h
+#include "src/iterators/chunks.h" // tini/iterators/chunks.h
 
 bool bigger_than_three(void* item) {
 	int* n = item;
@@ -53,7 +54,21 @@ int main(void) {
 	tini_foreach (int, num, iter) {
 		printf("%d ", *num);
 	}
-	putchar('\n');
+
+	sliced = tini_slice_new(nums, tini_arrlen(nums), 0, tini_arrlen(nums), sizeof(int));
+	TiniSliceIterator slice_iter = tini_slice_iter(&sliced);
+	iter = tini_slice_iterator_as_iterator(&slice_iter);
+	printf("chunks: %zu\n", tini_count(tini_chunks(iter, tini_arrlen(nums) / 2, alloca)));
+
+	slice_iter = tini_slice_iter(&sliced);
+	iter = tini_slice_iterator_as_iterator(&slice_iter);
+	TiniIterator chunk_iter = tini_chunks(iter, tini_arrlen(nums) / 2, alloca);
+	tini_foreach (tini_slice_t(int**), chunk, chunk_iter) {
+		for (size_t i = 0; i < chunk->length; i++) {
+			int** num = tini_slice_at(chunk, i);
+			printf("%d\n", **num);
+		}
+	}
 
 	return 0;
 }

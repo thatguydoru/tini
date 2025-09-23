@@ -31,7 +31,7 @@ typedef struct TiniSlice {
 } TiniSlice;
 
 TiniSlice tini_slice_new(void* items, size_t maxlen, size_t start, size_t end, size_t item_size);
-void* tini_slice_at(const TiniSlice* vec, size_t index);
+void* tini_slice_at(const TiniSlice* slice, size_t index);
 
 typedef struct TiniSliceIterator {
 	TiniSlice* slice;

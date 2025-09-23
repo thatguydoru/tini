@@ -16,7 +16,7 @@
 
 #include "iter.h"
 
-inline void* tini_next(TiniIterator iterator) {
+void* tini_next(TiniIterator iterator) {
 	return iterator.vtable->next(iterator.self);
 }
 
